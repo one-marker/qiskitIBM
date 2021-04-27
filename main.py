@@ -1,35 +1,35 @@
+import numpy as np
+import math
 from qiskit import(
   QuantumCircuit,
-  execute,
-  Aer)
+  QuantumRegister,
+  ClassicalRegister,
+  Aer,
+  execute)
 from qiskit.visualization import plot_histogram
 
-# Use Aer's qasm_simulator
-simulator = Aer.get_backend('qasm_simulator')
+#simulator = Aer.get_backend('qasm_simulator')
+c1 = ClassicalRegister(1)
+c2 = ClassicalRegister(1)
+q = QuantumRegister(3)
+qc = QuantumCircuit(q, c1, c2)
+qc.initialize([1/math.sqrt(2), 1/math.sqrt(2)], 0)
+qc.h(1)
+qc.cx(1,2)
+qc.barrier()
+qc.cx(0,1)
+qc.h(0)
+qc.barrier()
+qc.measure(q[0], c1)
+qc.measure(q[1], c2)
 
-# Create a Quantum Circuit acting on the q register
-circuit = QuantumCircuit(2, 2)
 
-# Add a H gate on qubit 0
-circuit.h(0)
+qc.x(2).c_if(c1, 1)
+qc.z(2).c_if(c2, 1)
+sim = Aer.get_backend('qasm_simulator')
+job = execute(qc, sim)
+res = job.result().get_counts()
+print(res)
 
-# Add a CX (CNOT) gate on control qubit 0 and target qubit 1
-circuit.cx(0, 1)
-#
-# Map the quantum measurement to the classical bits
-circuit.measure([0,1], [0,1])
+print(qc.draw())
 
-# Execute the circuit on the qasm simulator
-job = execute(circuit, simulator, shots=1000)
-
-# Grab results from the job
-result = job.result()
-
-# Returns counts
-counts = result.get_counts(circuit)
-print("\nTotal count for 00 and 11 are:",counts)
-
-# Draw the circuit
-circuit.draw()
-
-print(circuit.draw())
