@@ -1,5 +1,6 @@
 import numpy as np
 import math
+import Teleport as tp
 from qiskit import(
   QuantumCircuit,
   QuantumRegister,
@@ -8,28 +9,5 @@ from qiskit import(
   execute)
 from qiskit.visualization import plot_histogram
 
-#simulator = Aer.get_backend('qasm_simulator')
-c1 = ClassicalRegister(1)
-c2 = ClassicalRegister(1)
-q = QuantumRegister(3)
-qc = QuantumCircuit(q, c1, c2)
-qc.initialize([1/math.sqrt(2), 1/math.sqrt(2)], 0)
-qc.h(1)
-qc.cx(1,2)
-qc.barrier()
-qc.cx(0,1)
-qc.h(0)
-qc.barrier()
-qc.measure(q[0], c1)
-qc.measure(q[1], c2)
-
-
-qc.x(2).c_if(c1, 1)
-qc.z(2).c_if(c2, 1)
-sim = Aer.get_backend('qasm_simulator')
-job = execute(qc, sim)
-res = job.result().get_counts()
-print(res)
-
+qc = tp.teleport()
 print(qc.draw())
-
