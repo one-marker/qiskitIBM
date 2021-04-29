@@ -9,7 +9,7 @@ from qiskit import(
   execute)
 from qiskit.visualization import plot_histogram
 
-def teleport():
+def build():
     c1 = ClassicalRegister(1)
     c2 = ClassicalRegister(1)
     q = QuantumRegister(3)

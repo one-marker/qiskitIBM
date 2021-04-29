@@ -1,6 +1,8 @@
 import numpy as np
 import math
-import Teleport as tp
+import Teleport
+import Grv
+
 from qiskit import(
   QuantumCircuit,
   QuantumRegister,
@@ -9,5 +11,9 @@ from qiskit import(
   execute)
 from qiskit.visualization import plot_histogram
 
-qc = tp.teleport()
-print(qc.draw())
+
+print("TELEPORT")
+print(Teleport.build().draw())
+
+print("GROVER")
+print(Grv.build().draw())
