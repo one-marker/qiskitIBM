@@ -6,3 +6,5 @@ RUN pip3 install matplotlib
 RUN pip3 install pylatexenc
 
 COPY . .
+
+RUN python3 main.py
