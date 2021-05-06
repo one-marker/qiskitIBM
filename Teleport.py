@@ -12,12 +12,13 @@ from qiskit.visualization import plot_histogram
 def build():
     c1 = ClassicalRegister(1)
     c2 = ClassicalRegister(1)
+    c3 = ClassicalRegister(1)
     q = QuantumRegister(3)
-    qc = QuantumCircuit(q, c1, c2)
-    qc.initialize([1/math.sqrt(2), 1/math.sqrt(2)], 0)
-    # qc.h(1)
-    # qc.cx(1,2)
-    qc = BellState.getBellsState(qc, 1, 2)
+    qc = QuantumCircuit(q, c1, c2, c3)
+    qc.initialize([1/3, math.sqrt(1 - 1/9)], 0)
+    qc.h(1)
+    qc.cx(1,2)
+    # qc = BellState.getBellsState(qc, 1, 2)
     
     
     qc.barrier()
@@ -26,14 +27,16 @@ def build():
     qc.barrier()
     qc.measure(q[0], c1)
     qc.measure(q[1], c2)
+
     
     
     qc.x(2).c_if(c1, 1)
     qc.z(2).c_if(c2, 1)
+    qc.measure(q[2], c3)
     sim = Aer.get_backend('qasm_simulator')
     job = execute(qc, sim)
     res = job.result().get_counts()
-    # print(res)
+    print("\nres: ", res)
     
     return qc;
 
